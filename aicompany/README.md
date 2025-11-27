@@ -62,7 +62,7 @@ $$;
 
 3. Chunk the movie script:
 ```bash
-python chunks_text.py
+python chunk_text.py
 ```
 
 4. Ingest the chunks:

@@ -62,7 +62,7 @@ $$;
 
 3. Chunk the movie script:
 ```bash
-python chunks_text.py
+python chunk_text.py
 ```
 
 4. Ingest the chunks:
@@ -99,3 +99,5 @@ python 2.py
    4. Does the cat appear in the movies? And how many times? 
    5. What does Harry say to Ron in the last scene?
    6. How many times did Harry call Ron?
+   7. What magic spell is used the most in the movie?
+   8. Can you give me the full list of magic spells used in the movie?

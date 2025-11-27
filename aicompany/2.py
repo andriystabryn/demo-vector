@@ -52,7 +52,7 @@ def search_policies(query: str) -> str:
     - Code of conduct and compliance
     
     Args:
-        query: The user's question or search query about company policies
+        query: The user's question or search query about company policies. MUST be in English. If the user asks in another language, translate it to English first.
     
     Returns:
         Relevant policy sections with section numbers, titles, and similarity scores
@@ -201,6 +201,11 @@ def main():
         system_prompt="""You are a helpful HR assistant with deep knowledge of AICompany's policies and procedures.
 You help employees understand company policies, benefits, procedures, and guidelines.
 When answering questions, use the search_policies tool to find relevant information from the official policy document.
+
+IMPORTANT: The search_policies tool works BEST with English queries.
+- If the user asks in another language, you MUST translate their query to English before calling search_policies.
+- After getting results, translate the answer back to the user's language.
+
 If you need more context around a found section, use get_section_by_number with include_adjacent=True to see surrounding sections.
 Provide accurate, professional responses based on the policy content.
 If you find relevant sections, reference the section numbers and titles.

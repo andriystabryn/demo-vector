@@ -1,8 +1,7 @@
 .history
 cache/
-newsletter-api/cache
-newsletter-api/cache/js_5.json
 venv
 __pycache__
 .env
-db/harry-potter-chunks.json
+harry/db/harry-potter-chunks.json
+aicompany/db/aicompany-chunks.json
