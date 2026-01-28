@@ -8,6 +8,9 @@ The perfect project to show vector DB limitations.
 
 2. Create the DB in Supabase:
 ```SQL
+-- Enable the pgvector extension to work with embeddings
+CREATE EXTENSION IF NOT EXISTS vector;
+
 -- Harry Potter Screenplay Table
 CREATE TABLE harry_potter (
   id BIGSERIAL PRIMARY KEY,

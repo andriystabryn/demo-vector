@@ -41,6 +41,8 @@ def chunk_by_scenes(text_file_path: str, output_file_path: str):
         chunks.append(chunk)
     
     # Process scenes (list alternates: scene_num, scene_title, content)
+    MAX_CHUNK_CHARS = 12000 # Approximately 3000-4000 tokens
+    
     for i in range(1, len(scenes), 3):
         if i+2 < len(scenes):
             scene_num = scenes[i]
@@ -48,19 +50,66 @@ def chunk_by_scenes(text_file_path: str, output_file_path: str):
             scene_content = scenes[i+2].strip()
             
             if scene_content:  # Only add non-empty scenes
-                chunk = {
-                    'id': f'scene_{scene_num}',
-                    'scene_number': int(scene_num),
-                    'scene_title': scene_title,
-                    'text': scene_content,
-                    'metadata': {
-                        'source': 'harry-potter-and-the-sorcerers-stone-screenplay',
-                        'scene': int(scene_num),
-                        'title': scene_title,
-                        'chunk_type': 'scene'
+                # Check if scene needs further splitting
+                if len(scene_content) > MAX_CHUNK_CHARS:
+                    # Split into parts
+                    paragraphs = scene_content.split('\n\n')
+                    current_part_content = ""
+                    part_num = 1
+                    
+                    for p in paragraphs:
+                        if len(current_part_content) + len(p) > MAX_CHUNK_CHARS and current_part_content:
+                            # Add current part
+                            chunk = {
+                                'id': f'scene_{scene_num}_part_{part_num}',
+                                'scene_number': int(scene_num),
+                                'scene_title': f"{scene_title} (Part {part_num})",
+                                'text': current_part_content.strip(),
+                                'metadata': {
+                                    'source': 'harry-potter-and-the-sorcerers-stone-screenplay',
+                                    'scene': int(scene_num),
+                                    'title': scene_title,
+                                    'part': part_num,
+                                    'chunk_type': 'scene_part'
+                                }
+                            }
+                            chunks.append(chunk)
+                            current_part_content = ""
+                            part_num += 1
+                        
+                        current_part_content += p + "\n\n"
+                    
+                    # Add last part
+                    if current_part_content.strip():
+                        chunk = {
+                            'id': f'scene_{scene_num}_part_{part_num}',
+                            'scene_number': int(scene_num),
+                            'scene_title': f"{scene_title} (Part {part_num})",
+                            'text': current_part_content.strip(),
+                            'metadata': {
+                                'source': 'harry-potter-and-the-sorcerers-stone-screenplay',
+                                'scene': int(scene_num),
+                                'title': scene_title,
+                                'part': part_num,
+                                'chunk_type': 'scene_part'
+                            }
+                        }
+                        chunks.append(chunk)
+                else:
+                    # Add as a single scene chunk
+                    chunk = {
+                        'id': f'scene_{scene_num}',
+                        'scene_number': int(scene_num),
+                        'scene_title': scene_title,
+                        'text': scene_content,
+                        'metadata': {
+                            'source': 'harry-potter-and-the-sorcerers-stone-screenplay',
+                            'scene': int(scene_num),
+                            'title': scene_title,
+                            'chunk_type': 'scene'
+                        }
                     }
-                }
-                chunks.append(chunk)
+                    chunks.append(chunk)
     
     # Save chunks to JSON file
     with open(output_file_path, 'w', encoding='utf-8') as f:

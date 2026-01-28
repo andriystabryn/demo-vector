@@ -8,6 +8,9 @@ We are going to build a RAG (Retrieval Augmented Generation) system using Supaba
 
 2. Create the Supabase DB:
 ```SQL
+-- Enable the pgvector extension to work with embeddings
+CREATE EXTENSION IF NOT EXISTS vector;
+
 -- AICompany Policies Table
 CREATE TABLE aicompany_policies (
   id BIGSERIAL PRIMARY KEY,
